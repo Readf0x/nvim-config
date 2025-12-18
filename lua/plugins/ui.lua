@@ -66,7 +66,7 @@ return require"genvim".inject {
 	{
 		name = "render-markdown.nvim",
 		ft = "markdown",
-		dependencies = require"genvim".inject {{ name = "image.nvim" }},
+		dependencies = {{ name = "image.nvim" }},
 	}
 }
 

@@ -1,7 +1,7 @@
 return require"genvim".inject {
 	{
 		name = "nvim-cmp",
-		dependencies = require"genvim".inject { "luasnip",
+		dependencies = { "luasnip",
 			{ name = "cmp-nvim-lsp" },
 			{ name = "cmp-nvim-lsp-document-symbol" },
 		},
@@ -66,7 +66,7 @@ return require"genvim".inject {
 	},
 	{
 		name = "luasnip",
-		dependencies = require"genvim".inject {{
+		dependencies = {{
 			name = "friendly-snippets",
 			config = function()
 				require("luasnip.loaders.from_vscode").lazy_load()

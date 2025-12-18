@@ -6,14 +6,21 @@ function M.inject(specs)
 	base = base or M.plugins
 
 	for _, spec in ipairs(specs) do
-		if type(spec) == "table"
-			and spec.name
-			and not spec.dir
-		then
-			spec.dir = base .. "/" .. spec.name
-		end
-		if spec.keys ~= nil and type(spec.keys) == "table" then
-			spec.keys = M.plug_keymaps(spec.keys)
+		if type(spec) == "table" then
+			if spec.name and not spec.dir then
+				spec.dir = base .. "/" .. spec.name
+			end
+			if spec.keys then
+				if type(spec.keys) == "table" then
+					spec.keys = M.plug_keymaps(spec.keys)
+				elseif type(spec.keys) == "function" then
+					local keys = spec.keys
+					spec.keys = function() return M.plug_keymaps(keys()) end
+				end
+			end
+			if spec.dependencies then
+				spec.dependencies = M.inject(spec.dependencies)
+			end
 		end
 	end
 

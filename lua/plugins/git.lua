@@ -2,7 +2,7 @@ return require"genvim".inject {
 	{
 		name = "gitsigns.nvim",
 		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
-		keys = function() local gs = require"gitsigns.actions"; return require"genvim".plug_keymaps {
+		keys = function() local gs = require"gitsigns.actions"; return {
 			["<C-g>r"] = { function() gs.reset_hunk() end, mode = {"n","v"}, desc = "Reset hunk" },
 			["<C-g>s"] = { function() gq.stage_hunk() end, mode = {"n","v"}, desc = "Stage hunk" },
 			["<C-g>S"] = { function() gs.stage_buffer() end, desc = "Stage buffer" },
