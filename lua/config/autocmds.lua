@@ -1,4 +1,4 @@
-require"helpers".autocmds {
+require"genvim".autocmds {
 	["BufNewFile,BufRead:**/hypr/**/*.conf"] = "set commentstring='# %s'",
 	["TextChanged,TextChangedI,ModeChanged:*.md"] = function()
 		if started == nil then
@@ -12,7 +12,7 @@ require"helpers".autocmds {
 	["BufNewFile,BufRead:*.nix"] = function()
 		MiniPairs.map_buf(vim.fn.bufnr('%'), 'i', '=', { action = 'open', pair = '=;', register = { cr = false } })
 		MiniPairs.map_buf(vim.fn.bufnr('%'), 'i', ';', { action = 'close', pair = '=;', register = { cr = false } })
-		require"helpers".keymaps {
+		require"genvim".keymaps {
 			["<C-e>"]      = { function() require("luasnip").snip_expand(require("luasnip").get_snippets().nix[1]) end, mode = "i", buffer = vim.fn.bufnr("%") },
 			["<M-C-e>"]    = { function() require("luasnip").snip_expand(require("luasnip").get_snippets().nix[3]) end, mode = "i", buffer = vim.fn.bufnr("%") },
 			["<leader>bh"] = { "<cmd>split|:term nh home switch .<CR>", buffer = vim.fn.bufnr("%"), desc = "Build Home-Manager" },
@@ -29,7 +29,7 @@ require"helpers".autocmds {
 		require"CC".def("go build .")
 	end,
 	["BufNewFile,BufRead:*.tet"] = function()
-		require"helpers".keymaps {
+		require"genvim".keymaps {
 			["<C-e>"]      = { function() require("luasnip").snip_expand(require("luasnip").get_snippets().tet[1]) end, mode = "i", buffer = vim.fn.bufnr("%") },
 			["<leader>bb"] = { "<cmd>!te "..vim.fn.expand("%p").."<CR>", buffer = vim.fn.bufnr("%"), desc = "Process file" },
 		}

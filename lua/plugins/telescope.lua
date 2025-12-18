@@ -12,10 +12,10 @@ return require"genvim".inject {
 			ts.load_extension("zoxide")
 		end,
 		keys = {
-			{ "<leader>tb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
-			{ "<leader>tf", "<cmd>Telescope fd<CR>", desc = "Files" },
-			{ "<leader>tg", "<cmd>Telescope live_grep<CR>", desc = "Search" },
-			{ "<leader>ts", "<cmd>Telescope grep_string<CR>", desc = "Search word", },
+			["<leader>tb"] = { "<cmd>Telescope buffers<CR>", desc = "Buffers" },
+			["<leader>tf"] = { "<cmd>Telescope fd<CR>", desc = "Files" },
+			["<leader>tg"] = { "<cmd>Telescope live_grep<CR>", desc = "Search" },
+			["<leader>ts"] = { "<cmd>Telescope grep_string<CR>", desc = "Search word", },
 		},
 	},
 	{ name = "plenary.nvim" },

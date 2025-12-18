@@ -1,4 +1,4 @@
-require"helpers".keymaps {
+require"genvim".keymaps {
 	["<leader>u"] = { "<cmd>noh<CR>",            desc = "Clear highlight" },
 	["<leader>s"] = { "<cmd>w<CR>",              desc = "Save" },
 	["<leader>c"] = { function() vim.cmd(":split|:term " .. require"CC".get()) end, desc = "Compile" },
