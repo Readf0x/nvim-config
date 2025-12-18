@@ -1,0 +1,72 @@
+return require"genvim".inject {
+	{
+		name = "everforest",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd(table.concat(vim.fn.readfile(vim.fn.expand("$HOME") .. "/.local/share/nvim/highlights.vim"), "\n"))
+			vim.cmd([[colorscheme everforest]])
+		end,
+	},
+	{
+		name = "which-key.nvim",
+		lazy = false,
+		opts = {
+			icons = { mappings = false },
+			spec = {
+				{ "<C-g>", group = "git", mode = { "n", "v" } },
+				{
+					{
+						{ "<leader>", group = "leader" },
+						{ "<leader>t", group = "telescope" },
+						{ "<leader>b", group = "per buffer" },
+						{ "<leader>D", group = "dap" },
+					},
+					mode = { "n", "v" }
+				},
+			}
+		}
+	},
+	{
+		name = "lualine.nvim",
+		lazy = false,
+		opts = {
+			options = {
+				component_separators = { left = "┃", right = "┃" },
+				disabled_filetypes = { winbar = { "dap-repl", "dap-view", "dap-view-term" } },
+				ignore_focus = { "neo-tree", "nvim-tree", "mini-files" },
+				section_separators = { left = "", right = "" },
+				theme = {
+					command = {
+						a = { bg = "15105664", fg = "#343f44" },
+						b = { bg = "#475258", fg = "#d3c6aa" },
+						c = { bg = "#343f44", fg = "#859289" },
+					},
+					insert = {
+						a = { bg = "#a7c080", fg = "#343f44" },
+						b = { bg = "#475258", fg = "#d3c6aa" },
+						c = { bg = "#343f44", fg = "#859289" },
+					},
+					normal = {
+						a = { bg = "#e67e80", fg = "#343f44" },
+						b = { bg = "#475258", fg = "#d3c6aa" },
+						c = { bg = "#343f44", fg = "#859289" },
+					},
+					visual = {
+						a = { bg = "#d699b6", fg = "#343f44" },
+						b = { bg = "#475258", fg = "#d3c6aa" },
+						c = { bg = "#343f44", fg = "#859289" },
+					},
+				},
+			},
+			sections = { lualine_x = { "encoding", "filetype" } },
+		}
+	},
+	-- markdown
+	{
+		name = "render-markdown.nvim",
+		ft = "markdown",
+		dependencies = require"genvim".inject {{ name = "image.nvim" }},
+	}
+}
+
