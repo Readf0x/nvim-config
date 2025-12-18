@@ -3,73 +3,73 @@ local M = {}
 M.plugins = vim.fn.stdpath("data") .. "/nix-plugins"
 
 function M.inject(specs)
-	base = base or M.plugins
+  base = base or M.plugins
 
-	for _, spec in ipairs(specs) do
-		if type(spec) == "table" then
-			if spec.name and not spec.dir then
-				spec.dir = base .. "/" .. spec.name
-			end
-			if spec.keys then
-				if type(spec.keys) == "table" then
-					spec.keys = M.plug_keymaps(spec.keys)
-				elseif type(spec.keys) == "function" then
-					local keys = spec.keys
-					spec.keys = function() return M.plug_keymaps(keys()) end
-				end
-			end
-			if spec.dependencies then
-				spec.dependencies = M.inject(spec.dependencies)
-			end
-		end
-	end
+  for _, spec in ipairs(specs) do
+    if type(spec) == "table" then
+    	if spec.name and not spec.dir then
+    		spec.dir = base .. "/" .. spec.name
+    	end
+    	if spec.keys then
+    		if type(spec.keys) == "table" then
+    			spec.keys = M.plug_keymaps(spec.keys)
+    		elseif type(spec.keys) == "function" then
+    			local keys = spec.keys
+    			spec.keys = function() return M.plug_keymaps(keys()) end
+    		end
+    	end
+    	if spec.dependencies then
+    		spec.dependencies = M.inject(spec.dependencies)
+    	end
+    end
+  end
 
-	return specs
+  return specs
 end
 
 function M.plug_keymaps(maps)
-	local fin = {}
-	for lhs, spec in pairs(maps) do
-		local opts = {}
+  local fin = {}
+  for lhs, spec in pairs(maps) do
+    local opts = {}
 
-		opts[1] = lhs
+    opts[1] = lhs
 
-		opts[2] = spec[1]
-		if opts[2] == nil then
-			error("Keymap for " .. lhs .. " has no RHS")
-		end
+    opts[2] = spec[1]
+    if opts[2] == nil then
+    	error("Keymap for " .. lhs .. " has no RHS")
+    end
 
-		for k, v in pairs(spec) do
-			if k ~= 1 then
-				opts[k] = v
-			end
-		end
+    for k, v in pairs(spec) do
+    	if k ~= 1 then
+    		opts[k] = v
+    	end
+    end
 
-		-- vim.keymap.set(mode, lhs, rhs, opts)
-		table.insert(fin, opts)
-	end
-	return fin
+    -- vim.keymap.set(mode, lhs, rhs, opts)
+    table.insert(fin, opts)
+  end
+  return fin
 end
 
 function M.keymaps(maps)
-	for lhs, spec in pairs(maps) do
-		local rhs = spec[1]
-		if rhs == nil then
-			error("Keymap for " .. lhs .. " has no RHS")
-		end
+  for lhs, spec in pairs(maps) do
+    local rhs = spec[1]
+    if rhs == nil then
+    	error("Keymap for " .. lhs .. " has no RHS")
+    end
 
-		local opts = {}
-		for k, v in pairs(spec) do
-			if k ~= 1 then
-				opts[k] = v
-			end
-		end
+    local opts = {}
+    for k, v in pairs(spec) do
+    	if k ~= 1 then
+    		opts[k] = v
+    	end
+    end
 
-		local mode = opts.mode or "n"
-		opts.mode = nil
+    local mode = opts.mode or "n"
+    opts.mode = nil
 
-		vim.keymap.set(mode, lhs, rhs, opts)
-	end
+    vim.keymap.set(mode, lhs, rhs, opts)
+  end
 end
 
 function M.autocmds(defs)
