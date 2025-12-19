@@ -23,9 +23,12 @@ return require"genvim".inject {
           ["<C-d>"] = cmp.mapping.scroll_docs(-4),
           ["<C-e>"] = cmp.mapping.close(),
           ["<C-u>"] = cmp.mapping.scroll_docs(4),
+          -- TODO: make this get the top selected item to figure out if it's luasnip or not
           ["<CR>"] = cmp.mapping(function(fallback)
+            local sel = cmp.get_selected_entry()
             if cmp.visible() then
-              if cmp.get_selected_entry().source.name == "luasnip"
+              if sel
+                and sel.source.name == "luasnip"
                 and require"luasnip".expandable()
               then
                 require"luasnip".expand()

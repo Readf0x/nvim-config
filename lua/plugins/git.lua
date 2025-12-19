@@ -4,7 +4,7 @@ return require"genvim".inject {
     event = { "BufReadPost", "BufNewFile", "BufWritePre" },
     keys = function() local gs = require"gitsigns.actions"; return {
       ["<C-g>r"] = { function() gs.reset_hunk() end, mode = {"n","v"}, desc = "Reset hunk" },
-      ["<C-g>s"] = { function() gq.stage_hunk() end, mode = {"n","v"}, desc = "Stage hunk" },
+      ["<C-g>s"] = { function() gs.stage_hunk() end, mode = {"n","v"}, desc = "Stage hunk" },
       ["<C-g>S"] = { function() gs.stage_buffer() end, desc = "Stage buffer" },
       ["<C-g>u"] = { function() gs.undo_stage_hunk() end, desc = "Undo stage" },
       ["<C-g>R"] = { function() gs.reset_buffer() end, desc = "Reset buffer" },
@@ -29,8 +29,26 @@ return require"genvim".inject {
     },
   },
   {
-    -- TODO: configure
     name = "git-conflict.nvim",
+    event = { "BufReadPost", "BufNewFile", "BufWritePre" },
+    opts = { default_mappings = {} },
+    keys = function() local gc = require"git-conflict"; return {
+      ["<C-g>co"] = { function() gc.choose("ours") end,   desc = "Choose current" },
+      ["<C-g>ct"] = { function() gc.choose("theirs") end, desc = "Choose incoming" },
+      ["<C-g>cb"] = { function() gc.choose("both") end,   desc = "Choose both" },
+      ["<C-g>cO"] = { function() gc.choose("none") end,   desc = "Choose none" },
+      ["]x"]      = { gc.find_prev,                       desc = "Previous conflict" },
+      ["[x"]      = { gc.find_next,                       desc = "Next conflict" },
+    } end,
+    cmd = {
+      "GitConflictChooseOurs",
+      "GitConflictChooseTheirs",
+      "GitConflictChooseBoth",
+      "GitConflictChooseNone",
+      "GitConflictNextConflict",
+      "GitConflictPrevConflict",
+      "GitConflictListQf",
+    },
   },
   {
     name = "lazygit.nvim",

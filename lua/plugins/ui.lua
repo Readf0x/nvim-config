@@ -15,9 +15,10 @@ return require"genvim".inject {
       icons = { mappings = false },
       spec = {{
         {
-          { "<M-d>", group = "dap" },
-          { "<C-g>", group = "git" },
-          { "<leader>", group = "leader" },
+          { "<M-d>",     group = "dap" },
+          { "<C-g>",     group = "git" },
+          { "<C-g>c",    group = "conflict" },
+          { "<leader>",  group = "leader" },
           { "<leader>t", group = "telescope" },
           { "<leader>b", group = "per buffer" },
         },
@@ -67,11 +68,29 @@ return require"genvim".inject {
       sections = { lualine_x = { "encoding", "filetype" } },
     }
   },
+  {
+    name = "neo-tree.nvim",
+    dependencies = {{ name = "nui.nvim" }},
+    keys = {
+      ["<leader>e"] = { "<cmd>Neotree toggle<CR>", desc = "File Tree" }
+    }
+  },
+  {
+    name = "ccc.nvim",
+    config = function() require"ccc".setup() end,
+    keys = {["<leader>p"] = { "<cmd>CccPick<CR>", desc = "Color Picker" }},
+    cmd = "CccPick"
+  },
+  {
+    name = "nvim-colorizer.lua",
+    config = function() require"colorizer".setup() end,
+    event = { "BufReadPost", "BufNewFile", "BufWritePre" },
+  },
   -- markdown
   {
     name = "render-markdown.nvim",
     ft = "markdown",
     dependencies = {{ name = "image.nvim" }},
-  }
+  },
 }
 

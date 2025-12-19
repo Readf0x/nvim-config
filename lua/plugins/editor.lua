@@ -13,6 +13,7 @@ return require"genvim".inject {
         skip_unbalanced = true,
       })
       require("mini.surround").setup({ enable = true })
+      MiniIcons.mock_nvim_web_devicons()
     end,
   },
   {
@@ -22,7 +23,7 @@ return require"genvim".inject {
     keys = {
       ["<leader>c"] = { function() vim.cmd(":split|:term " .. require"CC".get()) end, desc = "Compile" },
     },
-    cmd = {"CC"}
+    cmd = "CC"
   },
   {
     name = "vim-easy-align",

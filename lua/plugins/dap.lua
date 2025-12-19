@@ -160,7 +160,7 @@ return require"genvim".inject {
     keys = {
       ["<M-d>v"] = { "<cmd>DapViewToggle<CR>", mode = "n", desc = "Toggle View" },
     },
-    cmd = {"DapViewToggle"},
+    cmd = "DapViewToggle",
   },
   {
     name = "nvim-dap-virtual-text",
