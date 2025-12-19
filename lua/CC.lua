@@ -21,7 +21,8 @@ function M.set(str)
   compile.set = str
 end
 
-function M.setup()
+function M.setup(opts)
+  opts = opts or {}
   vim.api.nvim_create_user_command("CC", function(opts)
     compile.set = opts.args
   end, { desc = "Set compile command", nargs = "+" })

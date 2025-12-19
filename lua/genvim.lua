@@ -7,20 +7,20 @@ function M.inject(specs)
 
   for _, spec in ipairs(specs) do
     if type(spec) == "table" then
-    	if spec.name and not spec.dir then
-    		spec.dir = base .. "/" .. spec.name
-    	end
-    	if spec.keys then
-    		if type(spec.keys) == "table" then
-    			spec.keys = M.plug_keymaps(spec.keys)
-    		elseif type(spec.keys) == "function" then
-    			local keys = spec.keys
-    			spec.keys = function() return M.plug_keymaps(keys()) end
-    		end
-    	end
-    	if spec.dependencies then
-    		spec.dependencies = M.inject(spec.dependencies)
-    	end
+      if spec.name and not spec.dir then
+        spec.dir = base .. "/" .. spec.name
+      end
+      if spec.keys then
+        if type(spec.keys) == "table" then
+          spec.keys = M.plug_keymaps(spec.keys)
+        elseif type(spec.keys) == "function" then
+          local keys = spec.keys
+          spec.keys = function() return M.plug_keymaps(keys()) end
+        end
+      end
+      if spec.dependencies then
+        spec.dependencies = M.inject(spec.dependencies)
+      end
     end
   end
 
@@ -36,13 +36,13 @@ function M.plug_keymaps(maps)
 
     opts[2] = spec[1]
     if opts[2] == nil then
-    	error("Keymap for " .. lhs .. " has no RHS")
+      error("Keymap for " .. lhs .. " has no RHS")
     end
 
     for k, v in pairs(spec) do
-    	if k ~= 1 then
-    		opts[k] = v
-    	end
+      if k ~= 1 then
+        opts[k] = v
+      end
     end
 
     -- vim.keymap.set(mode, lhs, rhs, opts)
@@ -55,14 +55,14 @@ function M.keymaps(maps)
   for lhs, spec in pairs(maps) do
     local rhs = spec[1]
     if rhs == nil then
-    	error("Keymap for " .. lhs .. " has no RHS")
+      error("Keymap for " .. lhs .. " has no RHS")
     end
 
     local opts = {}
     for k, v in pairs(spec) do
-    	if k ~= 1 then
-    		opts[k] = v
-    	end
+      if k ~= 1 then
+        opts[k] = v
+      end
     end
 
     local mode = opts.mode or "n"
