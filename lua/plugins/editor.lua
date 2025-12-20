@@ -1,6 +1,5 @@
 return require"genvim".inject {
-  {
-    name = "mini.nvim",
+  { name = "mini.nvim",
     lazy = false,
     config = function()
       require("mini.ai").setup({ enable = true })
@@ -16,8 +15,7 @@ return require"genvim".inject {
       MiniIcons.mock_nvim_web_devicons()
     end,
   },
-  {
-    name = "CC",
+  { name = "CC",
     dir = vim.fn.stdpath("config"),
     config = function() require"CC".setup() end,
     keys = {
@@ -25,8 +23,7 @@ return require"genvim".inject {
     },
     cmd = "CC"
   },
-  {
-    name = "vim-easy-align",
+  { name = "vim-easy-align",
     keys = {
       ["<leader>A"] = { ":EasyAlign ",         mode = {"n","v"}, desc = "Align" },
       ["<leader>V"] = { "vi{:EasyAlign<CR>* ", mode = {"n","v"}, desc = "Align Struct" },

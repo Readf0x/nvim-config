@@ -1,6 +1,5 @@
 return require"genvim".inject {
-  {
-    name = "telescope.nvim",
+  { name = "telescope.nvim",
     dependencies = require"genvim".inject {
       "plenary.nvim",
       "telescope-fzf-native.nvim",

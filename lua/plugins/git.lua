@@ -1,6 +1,5 @@
 return require"genvim".inject {
-  {
-    name = "gitsigns.nvim",
+  { name = "gitsigns.nvim",
     event = { "BufReadPost", "BufNewFile", "BufWritePre" },
     keys = function() local gs = require"gitsigns.actions"; return {
       ["<C-g>r"] = { function() gs.reset_hunk() end, mode = {"n","v"}, desc = "Reset hunk" },
@@ -14,8 +13,7 @@ return require"genvim".inject {
       ["<C-g>D"] = { function() gs.toggle_deleted() end, desc = "Toggle deleted" },
     } end,
   },
-  {
-    name = "gitlinker.nvim",
+  { name = "gitlinker.nvim",
     dependencies = { "plenary.nvim" },
     keys = {
       ["<C-g>l"] = { function()
@@ -28,8 +26,7 @@ return require"genvim".inject {
       end, desc = "Copy repo url" },
     },
   },
-  {
-    name = "git-conflict.nvim",
+  { name = "git-conflict.nvim",
     event = { "BufReadPost", "BufNewFile", "BufWritePre" },
     opts = { default_mappings = {} },
     keys = function() local gc = require"git-conflict"; return {
@@ -50,13 +47,12 @@ return require"genvim".inject {
       "GitConflictListQf",
     },
   },
-  {
-    name = "lazygit.nvim",
+  { name = "lazygit.nvim",
     config = function()
       vim.g.lazygit_floating_window_border_chars = { "", "", "", "", "", "", "", "" }
     end,
     keys = {
       ["<C-g>g"] = { function() require"lazygit".lazygit() end, desc = "LazyGit" }
     }
-  }
+  },
 }

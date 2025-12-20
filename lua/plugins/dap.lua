@@ -12,8 +12,7 @@ local function get_sel()
 end
 
 return require"genvim".inject {
-  {
-    name = "nvim-dap",
+  { name = "nvim-dap",
     dependencies = {"nvim-dap-virtual-text"},
     config = function()
       local dap = require"dap"
@@ -154,16 +153,14 @@ return require"genvim".inject {
       "DapToggleRepl",
     },
   },
-  {
-    name = "nvim-dap-view",
+  { name = "nvim-dap-view",
     dependencies = {"nvim-dap"},
     keys = {
       ["<M-d>v"] = { "<cmd>DapViewToggle<CR>", mode = "n", desc = "Toggle View" },
     },
     cmd = "DapViewToggle",
   },
-  {
-    name = "nvim-dap-virtual-text",
+  { name = "nvim-dap-virtual-text",
     dependencies = {"nvim-dap"},
     opts = {
       enabled_commands = true,

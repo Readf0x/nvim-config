@@ -6,6 +6,7 @@ h.map(require){
   "config.autocmds",
   "config.keymaps",
 }
+inspect = h.inspect
 
 local o = {
   clipboard = 'unnamedplus',

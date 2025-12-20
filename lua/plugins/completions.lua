@@ -1,6 +1,5 @@
 return require"genvim".inject {
-  {
-    name = "nvim-cmp",
+  { name = "nvim-cmp",
     dependencies = { "luasnip",
       { name = "cmp-nvim-lsp" },
       { name = "cmp-nvim-lsp-document-symbol" },
@@ -70,8 +69,7 @@ return require"genvim".inject {
       }
     end
   },
-  {
-    name = "luasnip",
+  { name = "luasnip",
     dependencies = {{ name = "friendly-snippets" }},
     config = function()
       require("luasnip").config.setup({})

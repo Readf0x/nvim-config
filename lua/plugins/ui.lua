@@ -1,6 +1,5 @@
 return require"genvim".inject {
-  {
-    name = "everforest",
+  { name = "everforest",
     lazy = false,
     priority = 1000,
     config = function()
@@ -8,8 +7,7 @@ return require"genvim".inject {
       vim.cmd([[colorscheme everforest]])
     end,
   },
-  {
-    name = "which-key.nvim",
+  { name = "which-key.nvim",
     lazy = false,
     opts = {
       icons = { mappings = false },
@@ -26,8 +24,7 @@ return require"genvim".inject {
       }}
     }
   },
-  {
-    name = "lualine.nvim",
+  { name = "lualine.nvim",
     lazy = false,
     opts = {
       options = {
@@ -68,27 +65,23 @@ return require"genvim".inject {
       sections = { lualine_x = { "encoding", "filetype" } },
     }
   },
-  {
-    name = "neo-tree.nvim",
+  { name = "neo-tree.nvim",
     dependencies = {{ name = "nui.nvim" }},
     keys = {
       ["<leader>e"] = { "<cmd>Neotree toggle<CR>", desc = "File Tree" }
     }
   },
-  {
-    name = "ccc.nvim",
+  { name = "ccc.nvim",
     config = function() require"ccc".setup() end,
     keys = {["<leader>p"] = { "<cmd>CccPick<CR>", desc = "Color Picker" }},
     cmd = "CccPick"
   },
-  {
-    name = "nvim-colorizer.lua",
+  { name = "nvim-colorizer.lua",
     config = function() require"colorizer".setup() end,
     event = { "BufReadPost", "BufNewFile", "BufWritePre" },
   },
   -- markdown
-  {
-    name = "render-markdown.nvim",
+  { name = "render-markdown.nvim",
     ft = "markdown",
     dependencies = {{ name = "image.nvim" }},
   },
