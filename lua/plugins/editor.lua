@@ -18,10 +18,11 @@ return require"genvim".inject {
   { name = "CC",
     dir = vim.fn.stdpath("config"),
     config = function() require"CC".setup() end,
-    keys = {
-      ["<leader>c"] = { function() vim.cmd(":split|:term " .. require"CC".get()) end, desc = "Compile" },
-    },
-    cmd = "CC"
+    keys = function() cc = require"CC"; return {
+      ["<leader>c"] = { function() cc.compile:run() end, desc = "Compile" },
+      ["<leader>r"] = { function() cc.run:run() end, desc = "Run" },
+    } end,
+    cmd = { "CC", "RC" }
   },
   { name = "vim-easy-align",
     keys = {
@@ -29,5 +30,11 @@ return require"genvim".inject {
       ["<leader>V"] = { "vi{:EasyAlign<CR>* ", mode = {"n","v"}, desc = "Align Struct" },
     },
     cmd = "EasyAlign"
+  },
+  { name = "inc-rename.nvim",
+    config = function() require"inc_rename".setup() end,
+    keys = {
+      ["<leader>R"] = { ":IncRename ", desc = "Rename" },
+    },
   },
 }

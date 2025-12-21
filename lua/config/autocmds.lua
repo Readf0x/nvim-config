@@ -24,10 +24,32 @@ require"genvim".autocmds {
     }
   end,
   ["BufNewFile,BufRead:*.odin"] = function()
-    require"CC".def("odin build . -debug")
+    local dir = vim.api.nvim_buf_get_name(0):match("(.*/)")
+    require"CC".compile:def("odin build "..dir.." -debug")
+    require"CC".run:def("odin run "..dir)
   end,
   ["BufNewFile,BufRead:*.go"] = function()
-    require"CC".def('go build . -gcflags=all="-N -l"')
+    local dir = vim.api.nvim_buf_get_name(0):match("(.*/)")
+    require"CC".compile:def('go build -gcflags=all="-N -l" '..dir)
+    require"CC".run:def('go run '..dir)
+  end,
+  ["BufNewFile,BufRead:*.js"] = function()
+    require"CC".run:def('node '..vim.api.nvim_buf_get_name(0))
+  end,
+  ["BufNewFile,BufRead:*.py"] = function()
+    require"CC".run:def('python3 '..vim.api.nvim_buf_get_name(0))
+  end,
+  ["BufNewFile,BufRead:*.sh"] = function()
+    require"CC".run:def(vim.api.nvim_buf_get_name(0))
+  end,
+  ["BufNewFile,BufRead:*.bash"] = function()
+    require"CC".run:def('bash '..vim.api.nvim_buf_get_name(0))
+  end,
+  ["BufNewFile,BufRead:*.zsh"] = function()
+    require"CC".run:def('zsh '..vim.api.nvim_buf_get_name(0))
+  end,
+  ["BufNewFile,BufRead:*.fish"] = function()
+    require"CC".run:def('fish '..vim.api.nvim_buf_get_name(0))
   end,
   ["BufNewFile,BufRead:*.tet"] = function()
     require"genvim".keymaps {

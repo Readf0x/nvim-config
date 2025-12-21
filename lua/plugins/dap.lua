@@ -1,45 +1,26 @@
 local launch_config = {}
-local function get_sel()
-  local s_start = vim.fn.getpos("'<")
-  local s_end   = vim.fn.getpos("'>")
-
-  return vim.api.nvim_buf_get_text(
-    0,
-    s_start[2] - 1, s_start[3] - 1,
-    s_end[2] - 1,   s_end[3],
-    {}
-  )
-end
-
 return require"genvim".inject {
   { name = "nvim-dap",
     dependencies = {"nvim-dap-virtual-text"},
     config = function()
       local dap = require"dap"
-      dap.adapters.gdb = {
-        type = "executable",
-        command = "gdb",
-        args = { "--interpreter=dap", "--eval-command", "set print pretty on" }
-      }
+      dap.adapters.gdb = function(callback, config)
+        launch_config = config
+        callback {
+          type = "executable",
+          command = "gdb",
+          args = { "--interpreter=dap", "--eval-command", "set print pretty on" }
+        }
+      end
       dap.configurations.c = {
         {
           name = "Launch",
           type = "gdb",
           request = "launch",
           program = function()
-            program = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-            launch_config = {
-              name = "Launch",
-              type = "gdb",
-              request = "launch",
-              program = program,
-              args = {},
-              cwd = "${workspaceFolder}",
-              stopAtBeginningOfMainSubprogram = false,
-            }
-            return program
+            return vim.fn.getcwd() .. "/" .. vim.fn.input("Path to executable: ", "", "file")
           end,
-          args = {}, -- provide arguments if needed
+          args = {},
           cwd = "${workspaceFolder}",
           stopAtBeginningOfMainSubprogram = false,
         },
@@ -48,19 +29,10 @@ return require"genvim".inject {
           type = "gdb",
           request = "launch",
           program = function()
-            local program = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-            launch_config.name = "Launch"
-            launch_config.type = "gdb"
-            launch_config.request = "launch"
-            launch_config.program = program
-            launch_config.cwd = "${workspaceFolder}"
-            launch_config.stopAtBeginningOfMainSubprogram = false
-            return program
+            return vim.fn.getcwd() .. "/" .. vim.fn.input("Path to executable: ", "", "file")
           end,
           args = function()
-            local args = vim.fn.split(vim.fn.input('Args: ', ''), " ")
-            launch_config.args = args
-            return args
+            return vim.fn.split(vim.fn.input("Args: ", ""), " ")
           end,
           cwd = "${workspaceFolder}",
           stopAtBeginningOfMainSubprogram = false,
@@ -70,26 +42,87 @@ return require"genvim".inject {
           type = "gdb",
           request = "attach",
           program = function()
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            return vim.fn.getcwd() .. "/" .. vim.fn.input("Path to executable: ", "", "file")
           end,
           pid = function()
-            local name = vim.fn.input('Executable name (filter): ')
+            local name = vim.fn.input("Executable name (filter): ")
             return require("dap.utils").pick_process({ filter = name })
           end,
-          cwd = '${workspaceFolder}'
+          cwd = "${workspaceFolder}"
         },
         {
-          name = 'Attach to gdbserver :1234',
-          type = 'gdb',
-          request = 'attach',
-          target = 'localhost:1234',
+          name = "Attach to gdbserver :1234",
+          type = "gdb",
+          request = "attach",
+          target = "localhost:1234",
           program = function()
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            return vim.fn.getcwd() .. "/" .. vim.fn.input("Path to executable: ", "", "file")
           end,
-          cwd = '${workspaceFolder}'
+          cwd = "${workspaceFolder}"
         }
       }
+
       dap.configurations.odin = dap.configurations.c
+
+      dap.adapters.delve = function(callback, config)
+        launch_config = config
+        if config.mode == 'remote' and config.request == 'attach' then
+          callback({
+            type = 'server',
+            host = config.host or '127.0.0.1',
+            port = config.port or '38697'
+          })
+        else
+          callback({
+            type = 'server',
+            port = '${port}',
+            executable = {
+              command = 'dlv',
+              args = { 'dap', '-l', '127.0.0.1:${port}', '--log', '--log-output=dap' },
+              detached = vim.fn.has("win32") == 0,
+              options = {env = {CGO_CFLAGS="-D_FORTIFY_SOURCE=0"}}
+            }
+          })
+        end
+      end
+      -- TODO: args
+      dap.configurations.go = {
+        {
+          type = "delve",
+          name = "Debug",
+          request = "launch",
+          program = "${file}"
+        },
+        {
+          type = "delve",
+          name = "Debug binary",
+          request = "launch",
+          mode = "exec",
+          program = function()
+            return vim.fn.getcwd() .. "/" .. vim.fn.input("Path to executable: ", "", "file")
+          end,
+        },
+        {
+          type = "delve",
+          name = "Debug test", -- configuration for debugging test files
+          request = "launch",
+          mode = "test",
+          program = "${file}"
+        },
+        {
+          name = "Attach to delve ${port}",
+          type = "delve",
+          request = "attach",
+          target = "localhost:${port}",
+          program = function()
+            return vim.fn.getcwd() .. "/" .. vim.fn.input("Path to executable: ", "", "file")
+          end,
+          cwd = "${workspaceFolder}"
+        }
+      }
+      -- dap.listeners.after.variables["local_config"] = function(session, error, response)
+      --   inspect(response, true)
+      -- end
       local signs = {
         DapBreakpoint          = { "●", "DiagnosticOk" },
         DapBreakpointCondition = { "○", "DiagnosticWarn" },
@@ -105,13 +138,14 @@ return require"genvim".inject {
       ["<M-d>c"] = { dap.continue, desc = "Continue" },
       ["<M-d>N"] = { "<cmd>DapNew<CR>", desc = "New" },
       ["<M-d>p"] = { dap.pause, desc = "Pause" },
-      ["<M-d>s"] = { dap.step_into, desc = "Step Into" },
-      ["<M-d>f"] = { dap.step_out, desc = "Step Out" },
-      ["<M-d>n"] = { dap.step_over, desc = "Step Over" },
+      ["<M-d>s"] = { dap.step_into, desc = "Step into" },
+      ["<M-d>f"] = { dap.step_out, desc = "Step out" },
+      ["<M-d>n"] = { dap.step_over, desc = "Step over" },
       ["<M-d>C"] = { dap.run_to_cursor, desc = "Run to cursor" },
       ["<M-d>t"] = { dap.terminate, desc = "Terminate" },
-      ["<M-d>b"] = { dap.toggle_breakpoint, desc = "Toggle Breakpoint" },
-      ["<M-d>R"] = { require"dap.repl".toggle, desc = "Toggle Repl" },
+      ["<M-d>b"] = { dap.toggle_breakpoint, desc = "Toggle breakpoint" },
+      ["<M-d>B"] = { dap.clear_breakpoints, desc = "Clear breakpoints" },
+      ["<M-d>R"] = { require"dap.repl".toggle, desc = "Toggle repl" },
       ["<M-d>r"] = {
         function()
           if dap.session() then
@@ -129,15 +163,22 @@ return require"genvim".inject {
       -- TODO: use treesitter to get the variable name or maybe even expression
       ["<M-d>p"] = {
         function()
-          local sel = get_sel()
-          if #sel > 1 or string.find(sel[1], "[ \n]") then
-            print("Invalid selection")
+          if vim.fn.mode() == "n" then
+            vim.api.nvim_input('"dyiw')
           else
-            vim.api.nvim_input("<Esc>")
-            dap.repl.execute("p " .. sel[1])
+            vim.api.nvim_input('"dy')
           end
+          vim.schedule(function()
+            word = vim.fn.getreg("d")
+            if string.find(word, "\n") then
+              print("Invalid selection")
+            else
+              vim.api.nvim_input("<Esc>")
+              dap.repl.execute("p " .. word)
+            end
+          end)
         end,
-        mode = "v",
+        mode = {"n","v"},
         desc = "Print value"
       }
     } end,
@@ -158,18 +199,30 @@ return require"genvim".inject {
     keys = {
       ["<M-d>v"] = { "<cmd>DapViewToggle<CR>", mode = "n", desc = "Toggle View" },
     },
-    cmd = "DapViewToggle",
+    cmd = {
+      "DapViewClose",
+      "DapViewJump",
+      "DapViewNavigate",
+      "DapViewOpen",
+      "DapViewShow",
+      "DapViewToggle",
+      "DapViewWatch",
+    },
   },
   { name = "nvim-dap-virtual-text",
-    dependencies = {"nvim-dap"},
-    opts = {
+    config = function() require"nvim-dap-virtual-text".setup{
       enabled_commands = true,
       virt_text_pos = "inline",
-    },
+    } end,
     keys = function() local vt = require"nvim-dap-virtual-text"; return {
       ["<M-d>Vr"] = { function() vt.refresh() end, mode = "n", desc = "Force Refresh" },
       ["<M-d>Vt"] = { function() vt.toggle() end, mode = "n", desc = "Toggle" },
     } end,
-    -- cmd = { "DapVirtualTextForceRefresh", "DapVirtualTextToggle" },
+    cmd = {
+      "DapVirtualTextDisable",
+      "DapVirtualTextEnable",
+      "DapVirtualTextForceRefresh",
+      "DapVirtualTextToggle",
+    },
   },
 }
