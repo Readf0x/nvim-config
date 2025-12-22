@@ -71,6 +71,9 @@ return require"genvim".inject {
       ["<leader>e"] = { "<cmd>Neotree toggle<CR>", desc = "File Tree" }
     }
   },
+  { name = "nvim-treesitter-context",
+    cmd = "TSContext"
+  },
   { name = "ccc.nvim",
     config = function() require"ccc".setup() end,
     keys = {["<leader>p"] = { "<cmd>CccPick<CR>", desc = "Color Picker" }},

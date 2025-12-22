@@ -1,5 +1,6 @@
 return require"genvim".inject {
   { name = "nvim-treesitter", lazy = false,
+    dependencies = {"nvim-treesitter-context"},
     config = function()
       require"nvim-treesitter.configs".setup {
         highlight = { enable = true },
@@ -10,7 +11,7 @@ return require"genvim".inject {
   },
   -- LSP
   { name = "nvim-lspconfig",
-    dependencies = require"genvim".inject {{
+    dependencies = {{
       name = "lsp_signature.nvim",
       opts = {
         fix_pos = true,

@@ -137,7 +137,7 @@ return require"genvim".inject {
     keys = function() local dap = require"dap"; return {
       ["<M-d>c"] = { dap.continue, desc = "Continue" },
       ["<M-d>N"] = { "<cmd>DapNew<CR>", desc = "New" },
-      ["<M-d>p"] = { dap.pause, desc = "Pause" },
+      ["<M-d>P"] = { dap.pause, desc = "Pause" },
       ["<M-d>s"] = { dap.step_into, desc = "Step into" },
       ["<M-d>f"] = { dap.step_out, desc = "Step out" },
       ["<M-d>n"] = { dap.step_over, desc = "Step over" },
