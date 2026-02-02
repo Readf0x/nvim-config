@@ -110,7 +110,7 @@ return require"genvim".inject {
           program = "${file}"
         },
         {
-          name = "Attach to delve ${port}",
+          name = "Attach to delve",
           type = "delve",
           request = "attach",
           target = "localhost:${port}",
