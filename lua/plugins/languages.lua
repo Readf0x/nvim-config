@@ -2,10 +2,10 @@ return require"genvim".inject {
   { name = "nvim-treesitter", lazy = false,
     dependencies = {"nvim-treesitter-context"},
     config = function()
-      require"nvim-treesitter.config".setup {
+      require"nvim-treesitter".setup {
+        install_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "site"),
         highlight = { enable = true },
         indent = { enable = true },
-        parser_install_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "site"),
       }
     end,
   },
