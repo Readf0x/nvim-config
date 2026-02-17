@@ -9,6 +9,32 @@ return require"genvim".inject {
       }
     end,
   },
+  { name = "nvim-ts-autotag", lazy = true,
+    ft = {
+      "astro",
+      "dot",
+      "glimmer",
+      "handlebars",
+      "html",
+      "javascript",
+      "jsx",
+      "liquid",
+      "vento",
+      "markdown",
+      "php",
+      "rescript",
+      "svelte",
+      "tsx",
+      "twig",
+      "typescript",
+      "vue",
+      "xml",
+      "templ"
+    },
+    opts = {
+      aliases = { ["templ"] = "html" }
+    }
+  },
   -- LSP
   { name = "nvim-lspconfig",
     dependencies = {{
